@@ -111,16 +111,12 @@ class PostCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Timestamps
+            // User info
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Created: ${post.createdAt.toString().split(' ')[0]}',
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
-                Text(
-                  'Updated: ${post.updatedAt.toString().split(' ')[0]}',
+                  'User ID: ${post.userId}',
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],

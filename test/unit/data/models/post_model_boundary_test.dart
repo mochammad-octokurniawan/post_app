@@ -3,7 +3,6 @@ import 'package:post_app/features/posts/data/models/post_model.dart';
 
 void main() {
   group('PostModel - Comprehensive Edge Case Tests', () {
-    final testDateTime = DateTime(2024, 1, 15, 10, 30, 0);
 
     group('Boundary Value Tests', () {
       test('should handle maximum integer ID', () {
@@ -12,7 +11,6 @@ void main() {
           title: 'Max ID Test',
           body: 'Testing maximum integer value',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.id, 9223372036854775807);
@@ -24,7 +22,6 @@ void main() {
           title: 'Min ID Test',
           body: 'Testing minimum integer value',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.id, -9223372036854775808);
@@ -36,7 +33,6 @@ void main() {
           title: 'Zero ID',
           body: 'Testing zero ID',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.id, 0);
@@ -48,7 +44,6 @@ void main() {
           title: 'Large User ID',
           body: 'Body',
           userId: 999999999,
-          createdAt: testDateTime,
         );
 
         expect(model.userId, 999999999);
@@ -62,7 +57,6 @@ void main() {
           title: '',
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.title, '');
@@ -74,7 +68,6 @@ void main() {
           title: 'Title',
           body: '',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.body, '');
@@ -87,7 +80,6 @@ void main() {
           title: longTitle,
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.title.length, 10000);
@@ -100,33 +92,30 @@ void main() {
           title: 'Title',
           body: longBody,
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.body.length, 100000);
       });
 
       test('should handle special characters in title', () {
-        final special = '!@#\$%^&*()_+-=[]{}|:;<>?,./~`';
+        final special = '!@#$%^&*()_+-=[]{}|:;<>?,./~`';
         final model = PostModel(
           id: 1,
           title: special,
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.title, special);
       });
 
       test('should handle special characters in body', () {
-        final special = '!@#\$%^&*()_+-=[]{}|:;<>?,./~`';
+        final special = '!@#$%^&*()_+-=[]{}|:;<>?,./~`';
         final model = PostModel(
           id: 1,
           title: 'Title',
           body: special,
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.body, special);
@@ -138,7 +127,6 @@ void main() {
           title: '你好世界 🌍',
           body: 'مرحبا Привет',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.title.contains('你好'), true);
@@ -151,7 +139,6 @@ void main() {
           title: '🚀 Rocket Post 🎉',
           body: '😊 Happy content 😄',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.title.contains('🚀'), true);
@@ -165,7 +152,6 @@ void main() {
           title: 'Title with\nnewlines',
           body: contentWithWhitespace,
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.title.contains('\n'), true);
@@ -179,7 +165,6 @@ void main() {
           title: 'HTML Title',
           body: html,
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.body, html);
@@ -192,90 +177,13 @@ void main() {
           title: 'JSON Title',
           body: json,
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.body, json);
       });
     });
 
-    group('DateTime Tests', () {
-      test('should handle UTC time', () {
-        final utcTime = DateTime.utc(2024, 1, 1, 0, 0, 0);
-        final model = PostModel(
-          id: 1,
-          title: 'Title',
-          body: 'Body',
-          userId: 1,
-          createdAt: utcTime,
-        );
-
-        expect(model.createdAt, utcTime);
-      });
-
-      test('should handle local time', () {
-        final localTime = DateTime(2024, 12, 31, 23, 59, 59);
-        final model = PostModel(
-          id: 1,
-          title: 'Title',
-          body: 'Body',
-          userId: 1,
-          createdAt: localTime,
-        );
-
-        expect(model.createdAt, localTime);
-      });
-
-      test('should preserve milliseconds', () {
-        final timeWithMs = DateTime(2024, 1, 15, 10, 30, 0, 123);
-        final model = PostModel(
-          id: 1,
-          title: 'Title',
-          body: 'Body',
-          userId: 1,
-          createdAt: timeWithMs,
-        );
-
-        expect(model.createdAt.millisecond, 123);
-      });
-
-      test('should preserve microseconds', () {
-        final timeWithMicros = DateTime(2024, 1, 15, 10, 30, 0, 123, 456);
-        final model = PostModel(
-          id: 1,
-          title: 'Title',
-          body: 'Body',
-          userId: 1,
-          createdAt: timeWithMicros,
-        );
-
-        expect(model.createdAt.microsecond, 456);
-      });
-
-      test('should handle year boundaries', () {
-        final oldDate = DateTime(1970, 1, 1);
-        final futureDate = DateTime(2099, 12, 31);
-        
-        final oldModel = PostModel(
-          id: 1,
-          title: 'Old',
-          body: 'Body',
-          userId: 1,
-          createdAt: oldDate,
-        );
-        
-        final futureModel = PostModel(
-          id: 2,
-          title: 'Future',
-          body: 'Body',
-          userId: 1,
-          createdAt: futureDate,
-        );
-
-        expect(oldModel.createdAt.year, 1970);
-        expect(futureModel.createdAt.year, 2099);
-      });
-    });
+;
 
     group('JSON Round-trip Tests', () {
       test('should survive JSON conversion with all field types', () {
@@ -284,7 +192,6 @@ void main() {
           title: 'Complex Title 中文',
           body: 'Body with\nnewlines\tand\ttabs',
           userId: 999,
-          createdAt: DateTime(2024, 6, 15, 12, 30, 45, 500, 250),
         );
 
         final json = original.toJson();
@@ -319,7 +226,6 @@ void main() {
           title: 'Original',
           body: 'Original Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         final updated = original.copyWith(
@@ -339,7 +245,6 @@ void main() {
           title: 'Step1',
           body: 'Body1',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         model = model.copyWith(title: 'Step2');
@@ -359,7 +264,6 @@ void main() {
           title: 'Title',
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         final m2 = PostModel(
@@ -367,7 +271,6 @@ void main() {
           title: 'Title',
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(m1.hashCode, m2.hashCode);
@@ -379,7 +282,6 @@ void main() {
           title: 'Title1',
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         final m2 = PostModel(
@@ -387,7 +289,6 @@ void main() {
           title: 'Title2',
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(m1.hashCode, isNot(equals(m2.hashCode)));
@@ -399,7 +300,6 @@ void main() {
           title: 'Title',
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         final m2 = PostModel(
@@ -407,7 +307,6 @@ void main() {
           title: 'Title',
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         final set = {m1, m2};
@@ -423,7 +322,6 @@ void main() {
           title: 'Title',
           body: 'Body',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         final string = model.toString();
@@ -437,7 +335,6 @@ void main() {
           title: '特殊文字',
           body: 'محتوى عربي',
           userId: 1,
-          createdAt: testDateTime,
         );
 
         expect(model.toString(), isNotEmpty);

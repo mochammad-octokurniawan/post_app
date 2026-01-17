@@ -112,7 +112,7 @@ class _PostFormPageState extends State<PostFormPage> {
           );
         }
 
-        if (state is PostLoading) {
+        if (state is PostListLoading || state is PostDetailLoading) {
           setState(() => _isSubmitting = true);
         }
       },

@@ -27,7 +27,6 @@ void main() {
       title: 'Test Post',
       body: 'Test Body',
       userId: 1,
-      createdAt: testDateTime,
     );
     testPostList = [
       testPost,
@@ -36,7 +35,6 @@ void main() {
         title: 'Post 2',
         body: 'Body 2',
         userId: 1,
-        createdAt: testDateTime,
       ),
     ];
   });
@@ -223,7 +221,6 @@ void main() {
         title: 'New Post',
         body: 'New Body',
         userId: 1,
-        createdAt: testDateTime,
       );
       when(() => mockRemoteDataSource.createPost(
             title: any(named: 'title'),

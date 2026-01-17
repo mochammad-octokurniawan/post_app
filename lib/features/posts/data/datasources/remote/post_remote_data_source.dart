@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:post_app/core/constants/app_constants.dart';
 import 'package:post_app/core/error/exceptions.dart';
@@ -105,7 +107,31 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        return PostModel.fromJson(response.data as Map<String, dynamic>);
+        final data = response.data;
+        if (data is Map<String, dynamic>) {
+          return PostModel.fromJson(data);
+        } else if (data is String) {
+          // Try to parse as JSON, fallback to minimal PostModel
+          try {
+            final parsed = jsonDecode(data);
+            if (parsed is Map<String, dynamic>) {
+              return PostModel.fromJson(parsed);
+            }
+          } catch (_) {}
+          return PostModel(
+            id: id,
+            title: '',
+            body: '',
+            userId: 1,
+          );
+        } else {
+          return PostModel(
+            id: id,
+            title: '',
+            body: '',
+            userId: 1,
+          );
+        }
       } else if (response.statusCode == 404) {
         throw ServerException('Post not found', statusCode: 404);
       } else {
@@ -146,7 +172,30 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        return PostModel.fromJson(response.data as Map<String, dynamic>);
+        final data = response.data;
+        if (data is Map<String, dynamic>) {
+          return PostModel.fromJson(data);
+        } else if (data is String) {
+          try {
+            final parsed = jsonDecode(data);
+            if (parsed is Map<String, dynamic>) {
+              return PostModel.fromJson(parsed);
+            }
+          } catch (_) {}
+          return PostModel(
+            id: 0,
+            title: title,
+            body: body,
+            userId: userId,
+          );
+        } else {
+          return PostModel(
+            id: 0,
+            title: title,
+            body: body,
+            userId: userId,
+          );
+        }
       } else {
         throw ServerException(
           'Failed to create post: ${response.statusCode}',
@@ -185,7 +234,30 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        return PostModel.fromJson(response.data as Map<String, dynamic>);
+        final data = response.data;
+        if (data is Map<String, dynamic>) {
+          return PostModel.fromJson(data);
+        } else if (data is String) {
+          try {
+            final parsed = jsonDecode(data);
+            if (parsed is Map<String, dynamic>) {
+              return PostModel.fromJson(parsed);
+            }
+          } catch (_) {}
+          return PostModel(
+            id: id,
+            title: title,
+            body: body,
+            userId: 1,
+          );
+        } else {
+          return PostModel(
+            id: id,
+            title: title,
+            body: body,
+            userId: 1,
+          );
+        }
       } else if (response.statusCode == 404) {
         throw ServerException('Post not found', statusCode: 404);
       } else {

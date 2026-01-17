@@ -15,12 +15,12 @@ import 'package:post_app/features/posts/domain/repositories/post_repository.dart
 /// - Retry logic for failed requests
 /// - Comprehensive error handling
 class PostRepositoryImpl implements PostRepository {
-
   /// Creates a [PostRepositoryImpl] with the given data sources.
   PostRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
   });
+
   /// The remote data source for API calls.
   final PostRemoteDataSource remoteDataSource;
 
@@ -32,24 +32,22 @@ class PostRepositoryImpl implements PostRepository {
     try {
       // Try to get from remote first
       final remotePosts = await remoteDataSource.getAllPosts();
-      
+      final cachedPosts = await localDataSource.getAllPosts();
+
       // Cache the successful response
-      await localDataSource.savePosts(remotePosts);
-      await localDataSource.setLastUpdateTime(DateTime.now());
-      
-      return Right(remotePosts);
+      if (cachedPosts.isEmpty) {
+        await localDataSource.savePosts(remotePosts);
+        await localDataSource.setLastUpdateTime(DateTime.now());
+      }
+
+      return Right(cachedPosts);
     } on ServerException catch (e) {
       // If remote fails, try cache
       try {
         final cachedPosts = await localDataSource.getAllPosts();
         return Right(cachedPosts);
       } on CacheException {
-        return Left(
-          ServerFailure(
-            e.message,
-            statusCode: e.statusCode,
-          ),
-        );
+        return Left(ServerFailure(e.message, statusCode: e.statusCode));
       }
     } on NetworkException catch (e) {
       // If network error, try cache
@@ -69,23 +67,19 @@ class PostRepositoryImpl implements PostRepository {
     try {
       // Try to get from remote first
       final remotePost = await remoteDataSource.getPostById(id);
-      
+
       // Cache the successful response
-      await localDataSource.savePost(remotePost);
-      
-      return Right(remotePost);
+      // await localDataSource.savePost(remotePost);
+      final cachedPost = await localDataSource.getPostById(id);
+
+      return Right(cachedPost);
     } on ServerException catch (e) {
       // If remote fails (404 or error), try cache
       try {
         final cachedPost = await localDataSource.getPostById(id);
         return Right(cachedPost);
       } on CacheException {
-        return Left(
-          ServerFailure(
-            e.message,
-            statusCode: e.statusCode,
-          ),
-        );
+        return Left(ServerFailure(e.message, statusCode: e.statusCode));
       }
     } on NetworkException catch (e) {
       // If network error, try cache
@@ -113,18 +107,13 @@ class PostRepositoryImpl implements PostRepository {
         body: body,
         userId: userId,
       );
-      
+
       // Cache the created post
       await localDataSource.savePost(createdPost);
-      
+
       return Right(createdPost);
     } on ServerException catch (e) {
-      return Left(
-        ServerFailure(
-          e.message,
-          statusCode: e.statusCode,
-        ),
-      );
+      return Left(ServerFailure(e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Left(NetworkFailure(e.message));
     } catch (e) {
@@ -145,18 +134,13 @@ class PostRepositoryImpl implements PostRepository {
         title: title,
         body: body,
       );
-      
+
       // Update cache
       await localDataSource.savePost(updatedPost);
-      
+
       return Right(updatedPost);
     } on ServerException catch (e) {
-      return Left(
-        ServerFailure(
-          e.message,
-          statusCode: e.statusCode,
-        ),
-      );
+      return Left(ServerFailure(e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Left(NetworkFailure(e.message));
     } catch (e) {
@@ -169,18 +153,13 @@ class PostRepositoryImpl implements PostRepository {
     try {
       // Delete from remote server
       await remoteDataSource.deletePost(id);
-      
+
       // Delete from cache
       await localDataSource.deletePost(id);
-      
+
       return const Right(null);
     } on ServerException catch (e) {
-      return Left(
-        ServerFailure(
-          e.message,
-          statusCode: e.statusCode,
-        ),
-      );
+      return Left(ServerFailure(e.message, statusCode: e.statusCode));
     } on NetworkException catch (e) {
       return Left(NetworkFailure(e.message));
     } catch (e) {

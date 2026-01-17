@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:post_app/features/posts/domain/entities/post_sort_type.dart';
 import 'package:post_app/features/posts/presentation/bloc/bloc.dart';
 import 'package:post_app/features/posts/presentation/widgets/post_widgets.dart';
+import 'package:post_app/features/posts/presentation/widgets/post_sort_widget.dart';
 
 /// Posts List Page
 /// 
@@ -36,6 +38,31 @@ class _PostListPageState extends State<PostListPage> {
         title: const Text('Posts'),
         elevation: 0,
         actions: [
+          // Sort button
+          BlocBuilder<PostBloc, PostState>(
+            builder: (context, state) {
+              final currentSort = state is PostListLoaded
+                  ? state.sortType
+                  : PostSortType.idAscending;
+
+              return IconButton(
+                icon: const Icon(Icons.sort),
+                tooltip: 'Sort posts',
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => PostSortBottomSheet(
+                      currentSortType: currentSort,
+                      onSortSelected: (sortType) {
+                        _postBloc.add(GetAllPostsEvent(sortType: sortType));
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          // Refresh button
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
@@ -46,7 +73,7 @@ class _PostListPageState extends State<PostListPage> {
       ),
       body: BlocBuilder<PostBloc, PostState>(
         builder: (context, state) {
-          if (state is PostInitial || state is PostLoading) {
+          if (state is PostInitial || state is PostListLoading) {
             return const LoadingWidget(message: 'Loading posts...');
           }
 
@@ -59,7 +86,7 @@ class _PostListPageState extends State<PostListPage> {
             );
           }
 
-          if (state is PostLoaded) {
+          if (state is PostListLoaded) {
             if (state.posts.isEmpty) {
               return EmptyWidget(
                 message: 'No posts available',

@@ -75,7 +75,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
         ),
         body: BlocBuilder<PostBloc, PostState>(
           builder: (context, state) {
-            if (state is PostInitial || state is PostLoading) {
+            if (state is PostInitial || state is PostDetailLoading) {
               return const LoadingWidget(message: 'Loading post...');
             }
 
@@ -90,8 +90,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
               );
             }
 
-            if (state is PostLoaded && state.posts.isNotEmpty) {
-              final post = state.posts.first;
+            if (state is PostDetailLoaded) {
+              final post = state.post;
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16),

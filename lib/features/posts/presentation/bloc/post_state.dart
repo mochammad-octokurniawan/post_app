@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:post_app/features/posts/domain/entities/post.dart';
+import 'package:post_app/features/posts/domain/entities/post_sort_type.dart';
 import 'package:post_app/core/error/failures.dart';
 
 /// Base class for all Post-related states
@@ -22,39 +23,104 @@ class PostInitial extends PostState {
   List<Object?> get props => [];
 }
 
-/// Loading state while fetching data from repository
-/// Used for:
-/// - Fetching all posts
-/// - Fetching single post
-/// - Creating new post
-/// - Updating post
-/// - Deleting post
+/// ============================================================================
+/// POST LIST STATES
+/// ============================================================================
+
+/// Loading state for fetching list of all posts
 /// 
 /// Typical UI: Shows loading spinner/skeleton
-class PostLoading extends PostState {
-  const PostLoading();
+class PostListLoading extends PostState {
+  const PostListLoading();
 
   @override
   List<Object?> get props => [];
 }
 
-/// Success state when posts are loaded and displayed
-/// Contains the list of posts to display
+/// Success state when list of posts is loaded and displayed
+/// Contains the list of posts to display with current sorting
 /// 
 /// Parameters:
 /// - [posts]: List of Post entities to display
+/// - [sortType]: Current sorting type applied to the list
 /// - [message]: Optional success message to show to user
 /// 
-/// Typical UI: Shows list of posts, hides loading indicator
+/// Typical UI: Shows list of posts in ListView with sort indicator
 /// 
 /// Example:
 /// ```dart
-/// if (state is PostLoaded) {
+/// if (state is PostListLoaded) {
 ///   return ListView(
 ///     children: state.posts.map((post) => PostTile(post)).toList(),
 ///   );
 /// }
 /// ```
+class PostListLoaded extends PostState {
+
+  const PostListLoaded({
+    required this.posts,
+    this.sortType = PostSortType.idAscending,
+    this.message,
+  });
+  final List<Post> posts;
+  final PostSortType sortType;
+  final String? message;
+
+  @override
+  List<Object?> get props => [posts, sortType, message];
+}
+
+/// ============================================================================
+/// POST DETAIL STATES
+/// ============================================================================
+
+/// Loading state for fetching a single post by ID
+/// 
+/// Parameters:
+/// - [postId]: The ID of the post being fetched
+/// 
+/// Typical UI: Shows loading spinner/skeleton for detail view
+class PostDetailLoading extends PostState {
+  const PostDetailLoading({
+    required this.postId,
+  });
+  
+  final String postId;
+
+  @override
+  List<Object?> get props => [postId];
+}
+
+/// Success state when a single post is loaded for detail view
+/// Contains the specific post to display in detail
+/// 
+/// Parameters:
+/// - [post]: The Post entity to display in detail
+/// - [message]: Optional success message to show to user
+/// 
+/// Typical UI: Shows full post content (title, body, metadata)
+/// 
+/// Example:
+/// ```dart
+/// if (state is PostDetailLoaded) {
+///   return PostCard(post: state.post);
+/// }
+/// ```
+class PostDetailLoaded extends PostState {
+
+  const PostDetailLoaded({
+    required this.post,
+    this.message,
+  });
+  final Post post;
+  final String? message;
+
+  @override
+  List<Object?> get props => [post, message];
+}
+
+/// Backwards compatibility - maps to list loaded
+@Deprecated('Use PostListLoaded or PostDetailLoaded instead')
 class PostLoaded extends PostState {
 
   const PostLoaded({
@@ -66,6 +132,17 @@ class PostLoaded extends PostState {
 
   @override
   List<Object?> get props => [posts, message];
+}
+
+/// Loading state that covers both list and detail loading
+/// 
+/// Typical UI: Shows loading spinner/skeleton
+@Deprecated('Use PostListLoading or PostDetailLoading instead')
+class PostLoading extends PostState {
+  const PostLoading();
+
+  @override
+  List<Object?> get props => [];
 }
 
 /// Error state when an operation fails

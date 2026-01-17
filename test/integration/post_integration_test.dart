@@ -37,7 +37,6 @@ class MockPostRepository implements PostRepository {
       title: title,
       body: body,
       userId: userId,
-      createdAt: DateTime.now(),
     );
     _posts.add(post);
     return Right(post);

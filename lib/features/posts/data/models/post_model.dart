@@ -16,8 +16,6 @@ class PostModel extends Post {
     required super.title,
     required super.body,
     required super.userId,
-    required super.createdAt,
-    super.updatedAt,
   });
 
   /// Creates a [PostModel] from a [Post] entity.
@@ -28,27 +26,20 @@ class PostModel extends Post {
       title: post.title,
       body: post.body,
       userId: post.userId,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
     );
 
   /// Creates a [PostModel] from a JSON map.
   ///
   /// Typically used when deserializing API responses from JSONPlaceholder API.
   /// The API response includes: id, userId, title, body
-  /// Additional fields like createdAt may be generated locally.
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
-      id: json['id'] as int,
-      userId: json['userId'] as int,
-      title: json['title'] as String,
-      body: json['body'] as String,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
-          : null,
-    );
+        id: json['id'] as int,
+        userId: json['userId'] is int
+          ? json['userId'] as int
+          : (json['userId'] != null ? int.tryParse(json['userId'].toString()) ?? 1 : 1),
+        title: json['title'] as String? ?? '',
+        body: json['body'] as String? ?? '',
+      );
 
   /// Converts this [PostModel] to a JSON map.
   ///
@@ -61,8 +52,6 @@ class PostModel extends Post {
       'userId': userId,
       'title': title,
       'body': body,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
     };
 
   /// Creates a copy of this model with specified fields replaced.
@@ -74,14 +63,10 @@ class PostModel extends Post {
     String? title,
     String? body,
     int? userId,
-    DateTime? createdAt,
-    DateTime? updatedAt,
   }) => PostModel(
       id: id ?? this.id,
       title: title ?? this.title,
       body: body ?? this.body,
       userId: userId ?? this.userId,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
     );
 }

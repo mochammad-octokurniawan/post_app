@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:post_app/core/constants/error_messages.dart';
 import 'package:post_app/core/error/failures.dart';
-import 'package:post_app/core/usecases/usecase.dart';
 import 'package:post_app/features/posts/domain/usecases/get_all_posts_usecase.dart';
 import 'package:post_app/features/posts/domain/usecases/read_post_usecase.dart';
 import 'package:post_app/features/posts/domain/usecases/create_post_usecase.dart';
@@ -86,20 +85,22 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   /// Handle GetAllPostsEvent
   /// 
   /// Flow:
-  /// 1. Emit PostLoading state
-  /// 2. Call GetAllPostsUseCase
+  /// 1. Emit PostListLoading state
+  /// 2. Call GetAllPostsUseCase with sorting params
   /// 3. Handle Either<Failure, List<Post>>:
-  ///    - Success: Emit PostLoaded with posts
+  ///    - Success: Emit PostListLoaded with sorted posts
   ///    - Failure: Emit PostError with failure details
   /// 
-  /// Event may have previous posts stored to maintain UI context
+  /// Event includes sorting type to determine post order
   Future<void> _onGetAllPostsEvent(
     GetAllPostsEvent event,
     Emitter<PostState> emit,
   ) async {
-    emit(const PostLoading());
+    emit(const PostListLoading());
 
-    final result = await _getAllPostsUseCase(const NoParams());
+    final result = await _getAllPostsUseCase(
+      GetAllPostsParams(sortType: event.sortType),
+    );
 
     result.fold(
       // Failure case
@@ -115,8 +116,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       // Success case
       (posts) {
         emit(
-          PostLoaded(
+          PostListLoaded(
             posts: posts,
+            sortType: event.sortType,
             message: ErrorMessages.createPostSuccess,
           ),
         );
@@ -127,18 +129,18 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   /// Handle GetPostByIdEvent
   /// 
   /// Flow:
-  /// 1. Emit PostLoading state
+  /// 1. Emit PostDetailLoading state with post ID
   /// 2. Call ReadPostUseCase with post ID
   /// 3. Handle Either<Failure, Post>:
-  ///    - Success: Emit PostLoaded with single post in list
+  ///    - Success: Emit PostDetailLoaded with single post
   ///    - Failure: Emit PostError with failure details
   /// 
-  /// Note: Returns single post wrapped in list for UI consistency
+  /// Note: Uses dedicated PostDetailLoaded state for detail view
   Future<void> _onGetPostByIdEvent(
     GetPostByIdEvent event,
     Emitter<PostState> emit,
   ) async {
-    emit(const PostLoading());
+    emit(PostDetailLoading(postId: event.id));
 
     final result = await _readPostUseCase(
       GetPostParams(id: int.parse(event.id)),
@@ -158,8 +160,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       // Success case
       (post) {
         emit(
-          PostLoaded(
-            posts: [post],
+          PostDetailLoaded(
+            post: post,
             message: ErrorMessages.createPostSuccess,
           ),
         );
@@ -170,7 +172,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   /// Handle CreatePostEvent
   /// 
   /// Flow:
-  /// 1. Emit PostLoading state
+  /// 1. Emit PostListLoading state
   /// 2. Call CreatePostUseCase with post data
   /// 3. Handle Either<Failure, Post>:
   ///    - Success: Emit PostCreated with new post
@@ -184,7 +186,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     CreatePostEvent event,
     Emitter<PostState> emit,
   ) async {
-    emit(const PostLoading());
+    emit(const PostListLoading());
 
     final result = await _createPostUseCase(
       CreatePostParams(
@@ -220,7 +222,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   /// Handle UpdatePostEvent
   /// 
   /// Flow:
-  /// 1. Emit PostLoading state
+  /// 1. Emit PostListLoading state
   /// 2. Call UpdatePostUseCase with updated post data
   /// 3. Handle Either<Failure, Post>:
   ///    - Success: Emit PostUpdated with updated post
@@ -234,7 +236,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     UpdatePostEvent event,
     Emitter<PostState> emit,
   ) async {
-    emit(const PostLoading());
+    emit(const PostListLoading());
 
     final result = await _updatePostUseCase(
       UpdatePostParams(
@@ -263,6 +265,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
             message: ErrorMessages.updatePostSuccess,
           ),
         );
+        // Automatically reload the post list
+        add(const GetAllPostsEvent());
       },
     );
   }
@@ -270,7 +274,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   /// Handle DeletePostEvent
   /// 
   /// Flow:
-  /// 1. Emit PostLoading state
+  /// 1. Emit PostListLoading state
   /// 2. Call DeletePostUseCase with post ID
   /// 3. Handle Either<Failure, void>:
   ///    - Success: Emit PostDeleted with success message
@@ -284,7 +288,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     DeletePostEvent event,
     Emitter<PostState> emit,
   ) async {
-    emit(const PostLoading());
+    emit(const PostListLoading());
 
     final result = await _deletePostUseCase(
       DeletePostParams(id: int.parse(event.id)),
@@ -308,6 +312,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
             message: ErrorMessages.deletePostSuccess,
           ),
         );
+        // Automatically reload the post list
+        add(GetAllPostsEvent());
       },
     );
   }
@@ -320,14 +326,16 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   /// - Trigger pull-to-refresh UI action
   /// - Update posts list after modifications
   /// 
-  /// Implementation same as GetAllPostsEvent
+  /// Includes sorting support via event parameter
   Future<void> _onRefreshPostsEvent(
     RefreshPostsEvent event,
     Emitter<PostState> emit,
   ) async {
-    emit(const PostLoading());
+    emit(const PostListLoading());
 
-    final result = await _getAllPostsUseCase(const NoParams());
+    final result = await _getAllPostsUseCase(
+      GetAllPostsParams(sortType: event.sortType),
+    );
 
     result.fold(
       // Failure case
@@ -343,8 +351,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       // Success case
       (posts) {
         emit(
-          PostLoaded(
+          PostListLoaded(
             posts: posts,
+            sortType: event.sortType,
             message: ErrorMessages.createPostSuccess,
           ),
         );

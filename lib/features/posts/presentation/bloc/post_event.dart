@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:post_app/features/posts/domain/entities/post_sort_type.dart';
 
 /// Base class for all Post-related events
 /// Extends Equatable for testing and comparison
@@ -9,18 +10,28 @@ abstract class PostEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Event to fetch all posts from the repository
+/// Event to fetch all posts from the repository with optional sorting
 /// Triggered when user navigates to posts list or requests refresh
+/// 
+/// Parameters:
+/// - [sortType]: Type of sorting to apply (defaults to ID ascending)
 /// 
 /// Example:
 /// ```dart
-/// context.read<PostBloc>().add(GetAllPostsEvent());
+/// context.read<PostBloc>().add(
+///   GetAllPostsEvent(sortType: PostSortType.titleAscending),
+/// );
 /// ```
 class GetAllPostsEvent extends PostEvent {
-  const GetAllPostsEvent();
+  const GetAllPostsEvent({
+    this.sortType = PostSortType.idAscending,
+  });
+
+  /// The sorting type to apply when fetching posts
+  final PostSortType sortType;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [sortType];
 }
 
 /// Event to fetch a single post by ID
@@ -127,17 +138,27 @@ class DeletePostEvent extends PostEvent {
   List<Object?> get props => [id];
 }
 
-/// Event to refresh posts list
+/// Event to refresh posts list with optional sorting
 /// Similar to GetAllPostsEvent but indicates explicit user refresh
 /// Can be used to clear cache and force API call
 /// 
+/// Parameters:
+/// - [sortType]: Type of sorting to apply (defaults to ID ascending)
+/// 
 /// Example:
 /// ```dart
-/// context.read<PostBloc>().add(RefreshPostsEvent());
+/// context.read<PostBloc>().add(
+///   RefreshPostsEvent(sortType: PostSortType.titleAscending),
+/// );
 /// ```
 class RefreshPostsEvent extends PostEvent {
-  const RefreshPostsEvent();
+  const RefreshPostsEvent({
+    this.sortType = PostSortType.idAscending,
+  });
+
+  /// The sorting type to apply when refreshing posts
+  final PostSortType sortType;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [sortType];
 }

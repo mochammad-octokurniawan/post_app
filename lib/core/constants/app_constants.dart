@@ -4,7 +4,7 @@ library;
 /// API configuration constants
 class ApiConstants {
   /// Base URL for the API
-  static const String baseUrl = 'https://www.jsonplaceholder.typicode.com';
+  static const String baseUrl = 'https://jsonplaceholder.typicode.com';
 
   /// Posts endpoint
   static const String postsEndpoint = '/posts';
