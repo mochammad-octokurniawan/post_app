@@ -56,13 +56,13 @@ class PostLoading extends PostState {
 /// }
 /// ```
 class PostLoaded extends PostState {
-  final List<Post> posts;
-  final String? message;
 
   const PostLoaded({
     required this.posts,
     this.message,
   });
+  final List<Post> posts;
+  final String? message;
 
   @override
   List<Object?> get props => [posts, message];
@@ -94,15 +94,15 @@ class PostLoaded extends PostState {
 /// }
 /// ```
 class PostError extends PostState {
-  final Failure failure;
-  final String message;
-  final List<Post>? previousPosts;
 
   const PostError({
     required this.failure,
     required this.message,
     this.previousPosts,
   });
+  final Failure failure;
+  final String message;
+  final List<Post>? previousPosts;
 
   @override
   List<Object?> get props => [failure, message, previousPosts];
@@ -127,13 +127,13 @@ class PostError extends PostState {
 /// }
 /// ```
 class PostCreated extends PostState {
-  final Post post;
-  final String message;
 
   const PostCreated({
     required this.post,
     required this.message,
   });
+  final Post post;
+  final String message;
 
   @override
   List<Object?> get props => [post, message];
@@ -157,13 +157,13 @@ class PostCreated extends PostState {
 /// }
 /// ```
 class PostUpdated extends PostState {
-  final Post post;
-  final String message;
 
   const PostUpdated({
     required this.post,
     required this.message,
   });
+  final Post post;
+  final String message;
 
   @override
   List<Object?> get props => [post, message];
@@ -187,11 +187,11 @@ class PostUpdated extends PostState {
 /// }
 /// ```
 class PostDeleted extends PostState {
-  final String message;
 
   const PostDeleted({
     required this.message,
   });
+  final String message;
 
   @override
   List<Object?> get props => [message];

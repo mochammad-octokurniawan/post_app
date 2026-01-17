@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:post_app/features/posts/data/models/post_model.dart';
-import 'package:post_app/features/posts/domain/entities/post.dart';
 
 void main() {
   group('PostModel - Extended Serialization Tests', () {

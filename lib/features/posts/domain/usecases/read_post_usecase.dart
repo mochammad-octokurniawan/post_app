@@ -10,25 +10,23 @@ import 'package:post_app/features/posts/domain/repositories/post_repository.dart
 /// This use case encapsulates the business logic for fetching a post
 /// by its unique identifier.
 class ReadPostUseCase extends UseCase<Post, GetPostParams> {
-  /// The repository to fetch the post from.
-  final PostRepository repository;
 
   /// Creates a [ReadPostUseCase] with the given [repository].
   ReadPostUseCase(this.repository);
+  /// The repository to fetch the post from.
+  final PostRepository repository;
 
   @override
-  Future<Either<Failure, Post>> call(GetPostParams params) async {
-    return await repository.getPostById(params.id);
-  }
+  Future<Either<Failure, Post>> call(GetPostParams params) async => await repository.getPostById(params.id);
 }
 
 /// Parameters for the [ReadPostUseCase].
 class GetPostParams extends Equatable {
-  /// The ID of the post to retrieve.
-  final int id;
 
   /// Creates [GetPostParams] with the given [id].
   const GetPostParams({required this.id});
+  /// The ID of the post to retrieve.
+  final int id;
 
   @override
   List<Object?> get props => [id];

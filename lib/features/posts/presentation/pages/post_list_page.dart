@@ -31,8 +31,7 @@ class _PostListPageState extends State<PostListPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: const Text('Posts'),
         elevation: 0,
@@ -103,5 +102,4 @@ class _PostListPageState extends State<PostListPage> {
         child: const Icon(Icons.add),
       ),
     );
-  }
 }

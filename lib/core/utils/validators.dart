@@ -83,21 +83,15 @@ class Validators {
   /// Checks if a string is not empty after trimming.
   ///
   /// Returns true if not empty, false otherwise.
-  static bool isNotEmpty(String value) {
-    return value.trim().isNotEmpty;
-  }
+  static bool isNotEmpty(String value) => value.trim().isNotEmpty;
 
   /// Checks if a number is positive.
   ///
   /// Returns true if positive, false otherwise.
-  static bool isPositive(num value) {
-    return value > 0;
-  }
+  static bool isPositive(num value) => value > 0;
 
   /// Checks if a value is within a range.
   ///
   /// Returns true if [value] is >= [min] and <= [max].
-  static bool isInRange(num value, num min, num max) {
-    return value >= min && value <= max;
-  }
+  static bool isInRange(num value, num min, num max) => value >= min && value <= max;
 }

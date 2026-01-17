@@ -56,11 +56,11 @@ abstract class PostRemoteDataSource {
 
 /// Implementation of [PostRemoteDataSource] using Dio.
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
-  /// The Dio HTTP client instance.
-  final Dio _dio;
 
   /// Creates a [PostRemoteDataSourceImpl] with the given Dio instance.
   PostRemoteDataSourceImpl(this._dio);
+  /// The Dio HTTP client instance.
+  final Dio _dio;
 
   @override
   Future<List<PostModel>> getAllPosts() async {
@@ -68,9 +68,9 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       final response = await _dio.get(
         '${ApiConstants.baseUrl}${ApiConstants.postsEndpoint}',
         options: Options(
-          sendTimeout: Duration(milliseconds: ApiConstants.sendTimeoutMs),
+          sendTimeout: const Duration(milliseconds: ApiConstants.sendTimeoutMs),
           receiveTimeout:
-              Duration(milliseconds: ApiConstants.receiveTimeoutMs),
+              const Duration(milliseconds: ApiConstants.receiveTimeoutMs),
         ),
       );
 
@@ -98,9 +98,9 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       final response = await _dio.get(
         '${ApiConstants.baseUrl}${ApiConstants.postsEndpoint}/$id',
         options: Options(
-          sendTimeout: Duration(milliseconds: ApiConstants.sendTimeoutMs),
+          sendTimeout: const Duration(milliseconds: ApiConstants.sendTimeoutMs),
           receiveTimeout:
-              Duration(milliseconds: ApiConstants.receiveTimeoutMs),
+              const Duration(milliseconds: ApiConstants.receiveTimeoutMs),
         ),
       );
 
@@ -117,7 +117,9 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
-      if (e is ServerException) rethrow;
+      if (e is ServerException) {
+        rethrow;
+      }
       throw ServerException('Unexpected error: $e');
     }
   }
@@ -137,9 +139,9 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
           'userId': userId,
         },
         options: Options(
-          sendTimeout: Duration(milliseconds: ApiConstants.sendTimeoutMs),
+          sendTimeout: const Duration(milliseconds: ApiConstants.sendTimeoutMs),
           receiveTimeout:
-              Duration(milliseconds: ApiConstants.receiveTimeoutMs),
+              const Duration(milliseconds: ApiConstants.receiveTimeoutMs),
         ),
       );
 
@@ -154,7 +156,9 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
-      if (e is ServerException) rethrow;
+      if (e is ServerException) {
+        rethrow;
+      }
       throw ServerException('Unexpected error: $e');
     }
   }
@@ -174,9 +178,9 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
           'id': id,
         },
         options: Options(
-          sendTimeout: Duration(milliseconds: ApiConstants.sendTimeoutMs),
+          sendTimeout: const Duration(milliseconds: ApiConstants.sendTimeoutMs),
           receiveTimeout:
-              Duration(milliseconds: ApiConstants.receiveTimeoutMs),
+              const Duration(milliseconds: ApiConstants.receiveTimeoutMs),
         ),
       );
 
@@ -193,7 +197,9 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
-      if (e is ServerException) rethrow;
+      if (e is ServerException) {
+        rethrow;
+      }
       throw ServerException('Unexpected error: $e');
     }
   }
@@ -204,9 +210,9 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       final response = await _dio.delete(
         '${ApiConstants.baseUrl}${ApiConstants.postsEndpoint}/$id',
         options: Options(
-          sendTimeout: Duration(milliseconds: ApiConstants.sendTimeoutMs),
+          sendTimeout: const Duration(milliseconds: ApiConstants.sendTimeoutMs),
           receiveTimeout:
-              Duration(milliseconds: ApiConstants.receiveTimeoutMs),
+              const Duration(milliseconds: ApiConstants.receiveTimeoutMs),
         ),
       );
 
@@ -223,7 +229,9 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     } on DioException catch (e) {
       throw _handleDioException(e);
     } catch (e) {
-      if (e is ServerException) rethrow;
+      if (e is ServerException) {
+        rethrow;
+      }
       throw ServerException('Unexpected error: $e');
     }
   }

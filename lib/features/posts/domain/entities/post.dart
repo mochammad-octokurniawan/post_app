@@ -5,6 +5,19 @@ import 'package:equatable/equatable.dart';
 /// This entity is independent of any external framework or UI implementation.
 /// It contains the core data structure for a post without any serialization logic.
 class Post extends Equatable {
+
+  /// Creates a new [Post] instance.
+  ///
+  /// All parameters are required except [updatedAt].
+  /// [createdAt] defaults to current time if not provided.
+  const Post({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.userId,
+    required this.createdAt,
+    this.updatedAt,
+  });
   /// Unique identifier for the post.
   final int id;
 
@@ -23,19 +36,6 @@ class Post extends Equatable {
   /// Timestamp when the post was last updated.
   final DateTime? updatedAt;
 
-  /// Creates a new [Post] instance.
-  ///
-  /// All parameters are required except [updatedAt].
-  /// [createdAt] defaults to current time if not provided.
-  const Post({
-    required this.id,
-    required this.title,
-    required this.body,
-    required this.userId,
-    required this.createdAt,
-    this.updatedAt,
-  });
-
   /// Returns a copy of this post with specified fields replaced.
   Post copyWith({
     int? id,
@@ -44,8 +44,7 @@ class Post extends Equatable {
     int? userId,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return Post(
+  }) => Post(
       id: id ?? this.id,
       title: title ?? this.title,
       body: body ?? this.body,
@@ -53,7 +52,6 @@ class Post extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
-  }
 
   @override
   List<Object?> get props => [id, title, body, userId, createdAt, updatedAt];

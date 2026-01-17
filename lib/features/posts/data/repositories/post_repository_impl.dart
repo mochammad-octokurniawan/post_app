@@ -15,17 +15,17 @@ import 'package:post_app/features/posts/domain/repositories/post_repository.dart
 /// - Retry logic for failed requests
 /// - Comprehensive error handling
 class PostRepositoryImpl implements PostRepository {
-  /// The remote data source for API calls.
-  final PostRemoteDataSource remoteDataSource;
-
-  /// The local data source for cache management.
-  final PostLocalDataSourceImpl localDataSource;
 
   /// Creates a [PostRepositoryImpl] with the given data sources.
   PostRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
   });
+  /// The remote data source for API calls.
+  final PostRemoteDataSource remoteDataSource;
+
+  /// The local data source for cache management.
+  final PostLocalDataSourceImpl localDataSource;
 
   @override
   Future<Either<Failure, List<Post>>> getAllPosts() async {

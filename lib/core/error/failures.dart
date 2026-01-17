@@ -5,11 +5,11 @@ import 'package:equatable/equatable.dart';
 /// Failures are used instead of throwing exceptions to represent
 /// error conditions in a functional programming style.
 abstract class Failure extends Equatable {
-  /// The error message describing the failure.
-  final String message;
 
   /// Creates a [Failure] with the given [message].
   const Failure(this.message);
+  /// The error message describing the failure.
+  final String message;
 
   @override
   List<Object?> get props => [message];
@@ -17,11 +17,11 @@ abstract class Failure extends Equatable {
 
 /// Failure representing a server-side error.
 class ServerFailure extends Failure {
-  /// The HTTP status code, if available.
-  final int? statusCode;
 
   /// Creates a [ServerFailure] with the given [message] and optional [statusCode].
   const ServerFailure(super.message, {this.statusCode});
+  /// The HTTP status code, if available.
+  final int? statusCode;
 
   @override
   List<Object?> get props => [message, statusCode];

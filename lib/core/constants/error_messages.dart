@@ -1,4 +1,5 @@
 /// User-friendly error messages for different failure types.
+library;
 
 class ErrorMessages {
   /// Error message for network connectivity issues

@@ -19,13 +19,13 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/posts',
       name: 'posts_list',
-      builder: (context, state) => PostListPage(),
+      builder: (context, state) => const PostListPage(),
       routes: [
         // Create route must come BEFORE :id route to prevent "create" from being parsed as ID
         GoRoute(
           path: 'create',
           name: 'post_create',
-          builder: (context, state) => PostFormPage(),
+          builder: (context, state) => const PostFormPage(),
         ),
         GoRoute(
           path: ':id',
@@ -49,16 +49,16 @@ final appRouter = GoRouter(
     ),
   ],
   errorBuilder: (context, state) => Scaffold(
-    appBar: AppBar(title: Text('Error')),
+    appBar: AppBar(title: const Text('Error')),
     body: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text('Page not found', style: Theme.of(context).textTheme.titleLarge),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => context.go('/posts'),
-            child: Text('Go Back Home'),
+            child: const Text('Go Back Home'),
           ),
         ],
       ),

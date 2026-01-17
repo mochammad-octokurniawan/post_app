@@ -10,21 +10,20 @@ import 'package:post_app/features/posts/domain/entities/post.dart';
 /// - [post]: Post entity to display
 /// - [onTap]: Callback when post is tapped
 class PostTile extends StatelessWidget {
-  /// The post data to display
-  final Post post;
-
-  /// Callback when tile is tapped
-  final VoidCallback onTap;
 
   const PostTile({
     required this.post,
     required this.onTap,
     super.key,
   });
+  /// The post data to display
+  final Post post;
+
+  /// Callback when tile is tapped
+  final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
+  Widget build(BuildContext context) => Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
@@ -47,7 +46,6 @@ class PostTile extends StatelessWidget {
         onTap: onTap,
       ),
     );
-  }
 }
 
 /// Reusable card widget for displaying post details
@@ -58,17 +56,16 @@ class PostTile extends StatelessWidget {
 /// Parameters:
 /// - [post]: Post entity to display
 class PostCard extends StatelessWidget {
-  /// The post data to display
-  final Post post;
 
   const PostCard({
     required this.post,
     super.key,
   });
+  /// The post data to display
+  final Post post;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
+  Widget build(BuildContext context) => Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -132,24 +129,22 @@ class PostCard extends StatelessWidget {
         ),
       ),
     );
-  }
 }
 
 /// Reusable loading indicator widget
 /// 
 /// Shows centered spinner with optional message
 class LoadingWidget extends StatelessWidget {
-  /// Optional message to display below spinner
-  final String? message;
 
   const LoadingWidget({
     this.message,
     super.key,
   });
+  /// Optional message to display below spinner
+  final String? message;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -164,28 +159,26 @@ class LoadingWidget extends StatelessWidget {
         ],
       ),
     );
-  }
 }
 
 /// Reusable error widget
 /// 
 /// Shows error icon, message, and optional retry button
 class ErrorMessageWidget extends StatelessWidget {
-  /// Error message to display
-  final String message;
-
-  /// Optional callback for retry button
-  final VoidCallback? onRetry;
 
   const ErrorMessageWidget({
     required this.message,
     this.onRetry,
     super.key,
   });
+  /// Error message to display
+  final String message;
+
+  /// Optional callback for retry button
+  final VoidCallback? onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
@@ -218,13 +211,19 @@ class ErrorMessageWidget extends StatelessWidget {
         ),
       ),
     );
-  }
 }
 
 /// Reusable empty state widget
 /// 
 /// Shows icon and message when no data available
 class EmptyWidget extends StatelessWidget {
+
+  const EmptyWidget({
+    required this.message,
+    this.actionText,
+    this.onAction,
+    super.key,
+  });
   /// Message to display
   final String message;
 
@@ -234,16 +233,8 @@ class EmptyWidget extends StatelessWidget {
   /// Optional callback for action button
   final VoidCallback? onAction;
 
-  const EmptyWidget({
-    required this.message,
-    this.actionText,
-    this.onAction,
-    super.key,
-  });
-
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
@@ -271,5 +262,4 @@ class EmptyWidget extends StatelessWidget {
         ),
       ),
     );
-  }
 }

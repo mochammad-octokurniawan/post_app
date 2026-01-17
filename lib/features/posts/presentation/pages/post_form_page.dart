@@ -17,16 +17,16 @@ import 'package:post_app/features/posts/presentation/bloc/bloc.dart';
 /// 
 /// Can be used for both create and edit modes
 class PostFormPage extends StatefulWidget {
-  /// Optional post to edit (null for create mode)
-  final Post? postToEdit;
-
-  /// Is edit mode (true) or create mode (false)
-  bool get isEditMode => postToEdit != null;
 
   const PostFormPage({
     this.postToEdit,
     super.key,
   });
+  /// Optional post to edit (null for create mode)
+  final Post? postToEdit;
+
+  /// Is edit mode (true) or create mode (false)
+  bool get isEditMode => postToEdit != null;
 
   @override
   State<PostFormPage> createState() => _PostFormPageState();
@@ -69,8 +69,7 @@ class _PostFormPageState extends State<PostFormPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocListener<PostBloc, PostState>(
+  Widget build(BuildContext context) => BlocListener<PostBloc, PostState>(
       listener: (context, state) {
         if (state is PostCreated) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -250,7 +249,6 @@ class _PostFormPageState extends State<PostFormPage> {
         ),
       ),
     );
-  }
 
   /// Submits the form
   /// 

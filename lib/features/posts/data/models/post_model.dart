@@ -12,26 +12,18 @@ class PostModel extends Post {
   /// All parameters are required. This constructor is typically called
   /// by the fromJson factory method.
   const PostModel({
-    required int id,
-    required String title,
-    required String body,
-    required int userId,
-    required DateTime createdAt,
-    DateTime? updatedAt,
-  }) : super(
-    id: id,
-    title: title,
-    body: body,
-    userId: userId,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
-  );
+    required super.id,
+    required super.title,
+    required super.body,
+    required super.userId,
+    required super.createdAt,
+    super.updatedAt,
+  });
 
   /// Creates a [PostModel] from a [Post] entity.
   ///
   /// Useful for converting domain entities to models for caching or API calls.
-  factory PostModel.fromEntity(Post post) {
-    return PostModel(
+  factory PostModel.fromEntity(Post post) => PostModel(
       id: post.id,
       title: post.title,
       body: post.body,
@@ -39,15 +31,13 @@ class PostModel extends Post {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
     );
-  }
 
   /// Creates a [PostModel] from a JSON map.
   ///
   /// Typically used when deserializing API responses from JSONPlaceholder API.
   /// The API response includes: id, userId, title, body
   /// Additional fields like createdAt may be generated locally.
-  factory PostModel.fromJson(Map<String, dynamic> json) {
-    return PostModel(
+  factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
       id: json['id'] as int,
       userId: json['userId'] as int,
       title: json['title'] as String,
@@ -59,7 +49,6 @@ class PostModel extends Post {
           ? DateTime.parse(json['updatedAt'] as String)
           : null,
     );
-  }
 
   /// Converts this [PostModel] to a JSON map.
   ///
@@ -67,8 +56,7 @@ class PostModel extends Post {
   /// - Sending data to API (POST/PUT requests)
   /// - Caching in local storage
   /// - Serializing for temporary storage
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
       'id': id,
       'userId': userId,
       'title': title,
@@ -76,7 +64,6 @@ class PostModel extends Post {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
     };
-  }
 
   /// Creates a copy of this model with specified fields replaced.
   ///
@@ -89,8 +76,7 @@ class PostModel extends Post {
     int? userId,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return PostModel(
+  }) => PostModel(
       id: id ?? this.id,
       title: title ?? this.title,
       body: body ?? this.body,
@@ -98,5 +84,4 @@ class PostModel extends Post {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
-  }
 }

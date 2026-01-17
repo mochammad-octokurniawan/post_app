@@ -55,16 +55,16 @@ abstract class PostLocalDataSource {
 
 /// Implementation of [PostLocalDataSource] using Hive.
 class PostLocalDataSourceImpl implements PostLocalDataSource {
-  /// Reference to the Hive box for posts.
-  late final Box<Map> _postsBox;
-
-  /// Reference to the Hive box for cache metadata.
-  late final Box<dynamic> _metadataBox;
 
   /// Creates a [PostLocalDataSourceImpl].
   ///
   /// Must call [initialize] before using this instance.
   PostLocalDataSourceImpl();
+  /// Reference to the Hive box for posts.
+  late final Box<Map> _postsBox;
+
+  /// Reference to the Hive box for cache metadata.
+  late final Box<dynamic> _metadataBox;
 
   /// Initializes the Hive boxes.
   ///
@@ -101,7 +101,9 @@ class PostLocalDataSourceImpl implements PostLocalDataSource {
       }
       return PostModel.fromJson(Map<String, dynamic>.from(postMap));
     } catch (e) {
-      if (e is CacheException) rethrow;
+      if (e is CacheException) {
+        rethrow;
+      }
       throw CacheException('Failed to get post $id from cache: $e');
     }
   }
@@ -171,10 +173,12 @@ class PostLocalDataSourceImpl implements PostLocalDataSource {
   Future<bool> isCacheValid() async {
     try {
       final lastUpdate = await getLastUpdateTime();
-      if (lastUpdate == null) return false;
+      if (lastUpdate == null) {
+        return false;
+      }
 
       final now = DateTime.now();
-      final expirationDuration =
+      const expirationDuration =
           Duration(hours: LocalStorageConstants.cacheExpirationHours);
       return now.difference(lastUpdate) < expirationDuration;
     } catch (e) {

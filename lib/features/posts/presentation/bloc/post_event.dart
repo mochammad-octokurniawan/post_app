@@ -34,9 +34,9 @@ class GetAllPostsEvent extends PostEvent {
 /// context.read<PostBloc>().add(GetPostByIdEvent(id: '1'));
 /// ```
 class GetPostByIdEvent extends PostEvent {
-  final String id;
 
   const GetPostByIdEvent({required this.id});
+  final String id;
 
   @override
   List<Object?> get props => [id];
@@ -61,15 +61,15 @@ class GetPostByIdEvent extends PostEvent {
 /// );
 /// ```
 class CreatePostEvent extends PostEvent {
-  final String title;
-  final String body;
-  final int userId;
 
   const CreatePostEvent({
     required this.title,
     required this.body,
     required this.userId,
   });
+  final String title;
+  final String body;
+  final int userId;
 
   @override
   List<Object?> get props => [title, body, userId];
@@ -94,15 +94,15 @@ class CreatePostEvent extends PostEvent {
 /// );
 /// ```
 class UpdatePostEvent extends PostEvent {
-  final String id;
-  final String title;
-  final String body;
 
   const UpdatePostEvent({
     required this.id,
     required this.title,
     required this.body,
   });
+  final String id;
+  final String title;
+  final String body;
 
   @override
   List<Object?> get props => [id, title, body];
@@ -119,9 +119,9 @@ class UpdatePostEvent extends PostEvent {
 /// context.read<PostBloc>().add(DeletePostEvent(id: '1'));
 /// ```
 class DeletePostEvent extends PostEvent {
-  final String id;
 
   const DeletePostEvent({required this.id});
+  final String id;
 
   @override
   List<Object?> get props => [id];

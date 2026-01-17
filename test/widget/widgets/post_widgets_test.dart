@@ -15,7 +15,6 @@ void main() {
     );
 
     testWidgets('renders PostTile with post data', (WidgetTester tester) async {
-      bool tapped = false;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -23,7 +22,6 @@ void main() {
             body: PostTile(
               post: testPost,
               onTap: () {
-                tapped = true;
               },
             ),
           ),

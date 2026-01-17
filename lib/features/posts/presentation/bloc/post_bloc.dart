@@ -44,11 +44,6 @@ import 'post_state.dart';
 /// )
 /// ```
 class PostBloc extends Bloc<PostEvent, PostState> {
-  final GetAllPostsUseCase _getAllPostsUseCase;
-  final ReadPostUseCase _readPostUseCase;
-  final CreatePostUseCase _createPostUseCase;
-  final UpdatePostUseCase _updatePostUseCase;
-  final DeletePostUseCase _deletePostUseCase;
 
   /// Constructor
   /// 
@@ -82,6 +77,11 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<DeletePostEvent>(_onDeletePostEvent);
     on<RefreshPostsEvent>(_onRefreshPostsEvent);
   }
+  final GetAllPostsUseCase _getAllPostsUseCase;
+  final ReadPostUseCase _readPostUseCase;
+  final CreatePostUseCase _createPostUseCase;
+  final UpdatePostUseCase _updatePostUseCase;
+  final DeletePostUseCase _deletePostUseCase;
 
   /// Handle GetAllPostsEvent
   /// 
@@ -304,7 +304,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       // Success case
       (_) {
         emit(
-          PostDeleted(
+          const PostDeleted(
             message: ErrorMessages.deletePostSuccess,
           ),
         );
